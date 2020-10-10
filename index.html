@@ -1,1 +1,36 @@
-<h1>Hello world</h1>
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Pavol's Ligts Out</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <div class="menu">
+    <div class="menuButton" data-size="8x8"></div>
+    <div class="menuButton" data-size="14x14"></div>
+    <div class="menuButton" data-size="20x20"></div>
+    <input  type="checkbox" id="sound"/>
+  </div>
+  <div class="gridwrapper">
+    <div class="grid"></div>
+  </div>
+  <div id="overlaywin">
+    <div id="overlayin">
+      <p class="big glow">Congratulations, you won!!!</p>
+      <p class="darker">Click anywhere to start a new game.
+    </div>
+  </div>
+  <div id="overlayloss">
+    <div id="overlayin">
+      <p class="big glow">Gosh darn it, you lost!!!</p>
+      <p class="darker">Click anywhere to start a new game.
+    </div>
+  </div>
+  <script src="main.js"></script>
+</body>
+
+</html>
