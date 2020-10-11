@@ -24,12 +24,14 @@ function prepare_dom(s) {
     const card = document.createElement("div");
     card.className = "card";
     card.setAttribute("data-cardInd", i);
+    card.innerHTML = "";
     card.addEventListener("click", () => {
       card_click_cb( s, card, i);
     });
     card.addEventListener('contextmenu', function(ev) {
         mark(s, i);
         render(s);
+        ev.preventDefault();
         return false;
     }, false);
     grid.appendChild(card);
@@ -59,7 +61,7 @@ function render(s) {
       if(s.arr[row][col].state == STATE_SHOWN){
         card.classList.add("flipped");
         let text = s.arr[row][col].mine ? "M" : s.arr[row][col].count == 0 ? " " : s.arr[row][col].count;
-        card.innerHTML = "<p style='text-align: center; margin: 0 auto; display: block;vertical-align: middle;'>"+text+"</p>";
+        card.innerHTML = "<div class='celltext'>"+text+"</div>";
       }
       else{
         card.classList.remove("flipped");
@@ -67,12 +69,15 @@ function render(s) {
       if(s.arr[row][col].state == STATE_MARKED){
         card.classList.add("marked");
       }
+      else{
+        card.classList.remove("marked");
+      }
     }
   }
-  document.querySelectorAll(".moveCount").forEach(
+  document.querySelectorAll(".minesCount").forEach(
     (e)=> {
-      e.textContent = String(s.moves);
-    });
+      e.textContent = String(s.nmines - s.nminesflagged);
+  });
 }
 let clickSound = new Audio("clunk.mp3");
 
@@ -111,8 +116,17 @@ function card_click_cb(s, card_div, ind) {
  * @param {number} rows 
  */
 function button_cb(s, cols, rows) {
-  initBoard(s, cols, rows, rows*cols/6);    // todo 
+  initBoard(s, cols, rows, Math.floor(rows*cols/6));    // todo 
+  clearCards(s);
   render(s);
+}
+function clearCards(s) {
+    const grid = document.querySelector(".grid");
+    grid.style.gridTemplateColumns = `repeat(${s.ncols}, 1fr)`;
+    for( let i = 0 ; i < grid.children.length ; i ++) {
+      const card = grid.children[i];
+      card.innerHTML = "";
+    }
 }
 function array2d( nrows, ncols, val) {
     const res = [];
@@ -227,6 +241,15 @@ function mark(s, ind) {
     s.nmarked += s.arr[row][col].state == STATE_MARKED ? -1 : 1;
     s.arr[row][col].state = s.arr[row][col].state == STATE_MARKED ?
         STATE_HIDDEN : STATE_MARKED;
+    
+    if (s.arr[row][col].state == STATE_MARKED){
+        if (s.arr[row][col].mine)
+            s.nminesflagged += 1;
+    }
+    else{
+        if (s.arr[row][col].mine)
+            s.nminesflagged -= 1;
+    }
     return true;
 }
 function getRendering(s) {
@@ -250,6 +273,8 @@ function initBoard(s, rows, cols, minescount) {
     s.nrows = rows;
     s.ncols = cols;
     s.nmines = minescount;
+    s.nminesflagged = 0;
+    s.startTime = new Date();
     s.nmarked = 0;
     s.nuncovered = 0;
     s.exploded = false;
@@ -263,6 +288,8 @@ function main() {
     ncols: null,
     nrows: null,
     nmines: null,
+    nminesflagged: null,
+    startTime: null,
     nmarked: 0,
     nuncovered: 0,
     exploded: false,
@@ -308,4 +335,13 @@ function main() {
 
   // simulate pressing 4x4 button to start new game
   button_cb(state, 8, 8);
+
+  // constantly update timer
+  setInterval(() => {
+    document.querySelectorAll(".elapsedTime").forEach(
+        (e)=> {
+          let endTime = new Date();
+          e.textContent = String(Math.floor((endTime-state.startTime)/1000))+"s";
+      });
+  }, 500);
 }
