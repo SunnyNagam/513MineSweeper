@@ -8,7 +8,6 @@
   }
   
   .card {
-    /*background-image: url(off.webp);*/
     background-color: black;
     background-repeat: no-repeat;
     background-size: cover;
@@ -31,14 +30,12 @@
   }
   
   .card.flipped {
-    /*background-image: url(on.webp);*/
     background-color: white;
     opacity: 1;
     transform: rotateY(0deg);
     padding-bottom: 0%;
   }
   .card.marked {
-    /*background-image: url(on.webp);*/
     background-color: red;
     opacity: 0;
     transform: rotateY(0deg);
@@ -46,6 +43,7 @@
 
   .celltext {
     text-align: center;
+    font-size: 15px;
     margin: 0 auto;
     display: block;
     padding: 0px;
@@ -55,16 +53,11 @@
     display: grid;
     grid-template-columns: repeat(20, 1fr);
     border-radius: 10px;
-    padding:5px;
-    width: calc(70vh);
+    padding: 5px;
+    width: calc(50vh);
+    max-width: 800px;
   }
 
-  /*.grid > div::before {
-    content: "";
-    padding-bottom: 100%;
-    display: block;
-  }*/
-  
   body {
     display: flex;
     flex-direction: column;
@@ -229,14 +222,9 @@
     appearance: none;
     -moz-appearance: none;
     -webkit-appearance: none;
-    /*content: url('sound-on.webp');*/
     display: block;
     outline: none;
     user-select: none;
-  }
-  
-  #sound:checked {
-    /*content: url('sound-off.webp');*/
   }
   
   .status {

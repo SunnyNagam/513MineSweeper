@@ -79,7 +79,6 @@ function render(s) {
       e.textContent = String(s.nmines - s.nminesflagged);
   });
 }
-let clickSound = new Audio("clunk.mp3");
 
 /**
  * callback for clicking a card
@@ -102,7 +101,6 @@ function card_click_cb(s, card_div, ind) {
   if( s.exploded) {
     document.querySelector("#overlayloss").classList.toggle("active");
   }
-  //clickSound.play();
 }
 
 /**
@@ -116,7 +114,7 @@ function card_click_cb(s, card_div, ind) {
  * @param {number} rows 
  */
 function button_cb(s, cols, rows) {
-  initBoard(s, cols, rows, Math.floor(rows*cols/6));    // todo 
+  initBoard(s, cols, rows, Math.floor(Math.round(rows-10)/8*30+10));
   clearCards(s);
   render(s);
 }
@@ -305,7 +303,7 @@ function main() {
   // register callbacks for buttons
   document.querySelectorAll(".menuButton").forEach((button) =>{
     [rows,cols] = button.getAttribute("data-size").split("x").map(s=>Number(s));
-    button.innerHTML = `${cols} &#x2715; ${rows}`
+    button.innerHTML = cols < 9 ? "Easy":"Hard"//`${cols} &#x2715; ${rows}`
     button.addEventListener("click", button_cb.bind(null, state, cols, rows));
   });
 
@@ -323,18 +321,11 @@ function main() {
     render(state); 
   });
 
-  // sound callback
-  let soundButton = document.querySelector("#sound");
-  soundButton.addEventListener("change", () => {
-    clickSound.volume = soundButton.checked ? 0 : 1;
-  });
-
-
   // create enough cards for largest game and register click callbacks
   prepare_dom( state);
 
-  // simulate pressing 4x4 button to start new game
-  button_cb(state, 8, 8);
+  // simulate pressing easy button to start new game
+  button_cb(state, 8, 10);
 
   // constantly update timer
   setInterval(() => {
