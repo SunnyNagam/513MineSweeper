@@ -76,7 +76,7 @@ function render(s) {
   }
   document.querySelectorAll(".minesCount").forEach(
     (e)=> {
-      e.textContent = String(s.nmines - s.nminesflagged);
+      e.textContent = String(s.nmines - s.nmarked);
   });
 }
 
