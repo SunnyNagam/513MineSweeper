@@ -303,7 +303,7 @@ function main() {
   // register callbacks for buttons
   document.querySelectorAll(".menuButton").forEach((button) =>{
     [rows,cols] = button.getAttribute("data-size").split("x").map(s=>Number(s));
-    button.innerHTML = cols < 9 ? "Easy":"Hard"
+    button.innerHTML = cols < 9 ? "Easy":"Hard";
     button.addEventListener("click", button_cb.bind(null, state, cols, rows));
   });
 
