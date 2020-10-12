@@ -124,6 +124,7 @@ function clearCards(s) {
     for( let i = 0 ; i < grid.children.length ; i ++) {
       const card = grid.children[i];
       card.classList.remove("flipped");
+      card.classList.remove("marked");
       card.innerHTML = "";
     }
 }
@@ -311,14 +312,14 @@ function main() {
   // callback for overlay click - hide overlay and regenerate game
   document.querySelector("#overlaywin").addEventListener("click", () => {
     document.querySelector("#overlaywin").classList.remove("active");
-    button_cb(state, state.rows, state.cols);
+    button_cb(state, state.nrows, state.ncols);
     render(state); 
   });
 
   // callback for overlay click - hide overlay and regenerate game
   document.querySelector("#overlayloss").addEventListener("click", () => {
     document.querySelector("#overlayloss").classList.remove("active");
-    button_cb(state, state.rows, state.cols);
+    button_cb(state, state.nrows, state.ncols);
     render(state); 
   });
 
