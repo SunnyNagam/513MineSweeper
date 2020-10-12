@@ -95,10 +95,10 @@ function card_click_cb(s, card_div, ind) {
   uncover(s, row, col);
   render(s);
   // check if we won and activate overlay if we did
-  if( s.nuncovered == (s.ncols*s.nrows-s.nmines)) { // == ===
+  if(s.nuncovered == (s.ncols*s.nrows-s.nmines)) {
     document.querySelector("#overlaywin").classList.toggle("active");
   }
-  if( s.exploded) {
+  if(s.exploded) {
     document.querySelector("#overlayloss").classList.toggle("active");
   }
 }
@@ -123,6 +123,7 @@ function clearCards(s) {
     grid.style.gridTemplateColumns = `repeat(${s.ncols}, 1fr)`;
     for( let i = 0 ; i < grid.children.length ; i ++) {
       const card = grid.children[i];
+      card.classList.remove("flipped");
       card.innerHTML = "";
     }
 }
@@ -218,7 +219,7 @@ function uncover(s, row, col) {
     ff(row,col);
     // have we hit a mine?
     if( s.arr[row][col].mine) {
-        s.exploded = true;
+      s.exploded = true;
     }
     console.log(getRendering(s));
     return true;
@@ -310,14 +311,14 @@ function main() {
   // callback for overlay click - hide overlay and regenerate game
   document.querySelector("#overlaywin").addEventListener("click", () => {
     document.querySelector("#overlaywin").classList.remove("active");
-    button_cb(state, 8, 8);
+    button_cb(state, state.rows, state.cols);
     render(state); 
   });
 
   // callback for overlay click - hide overlay and regenerate game
   document.querySelector("#overlayloss").addEventListener("click", () => {
     document.querySelector("#overlayloss").classList.remove("active");
-    button_cb(state, 8, 8);
+    button_cb(state, state.rows, state.cols);
     render(state); 
   });
 
