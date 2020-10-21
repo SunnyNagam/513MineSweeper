@@ -18,13 +18,16 @@ function rndInt(min, max) {
  * @param {state} s 
  */
 function prepare_dom(s) {
+  
   const grid = document.querySelector(".grid");
   const nCards = 20 * 20 ; // max grid size
+
   for( let i = 0 ; i < nCards ; i ++) {
     const card = document.createElement("div");
     card.className = "card";
     card.setAttribute("data-cardInd", i);
     card.innerHTML = "";
+
     card.addEventListener("click", () => {
       card_click_cb( s, card, i);
     });
@@ -34,6 +37,7 @@ function prepare_dom(s) {
         ev.preventDefault();
         return false;
     }, false);
+
     grid.appendChild(card);
   }
 }
@@ -48,6 +52,7 @@ function prepare_dom(s) {
 function render(s) {
   const grid = document.querySelector(".grid");
   grid.style.gridTemplateColumns = `repeat(${s.ncols}, 1fr)`;
+  grid.style.gridTemplateRows = `repeat(${s.nrows}, 1fr)`;
   for( let i = 0 ; i < grid.children.length ; i ++) {
     const card = grid.children[i];
     const ind = Number(card.getAttribute("data-cardInd"));
@@ -55,12 +60,12 @@ function render(s) {
       card.style.display = "none";
     }
     else {
-      card.style.display = "block";
+      card.style.display = "flex";
       const col = ind % s.ncols;
       const row = Math.floor(ind / s.ncols);
       if(s.arr[row][col].state == STATE_SHOWN){
         card.classList.add("flipped");
-        let text = s.arr[row][col].mine ? "M" : s.arr[row][col].count == 0 ? " " : s.arr[row][col].count;
+        let text = s.arr[row][col].mine ? "⚠︎" : s.arr[row][col].count == 0 ? " " : s.arr[row][col].count;
         card.innerHTML = "<div class='celltext'>"+text+"</div>";
       }
       else{
@@ -68,9 +73,15 @@ function render(s) {
       }
       if(s.arr[row][col].state == STATE_MARKED){
         card.classList.add("marked");
+        let text = "⚑";
+        card.innerHTML = "<div class='celltext marked'>"+text+"</div>";
       }
       else{
         card.classList.remove("marked");
+      }
+
+      if(s.arr[row][col].state == STATE_HIDDEN){
+        card.innerHTML = "";
       }
     }
   }
@@ -94,12 +105,13 @@ function card_click_cb(s, card_div, ind) {
   card_div.classList.add("flipped");
   uncover(s, row, col);
   render(s);
+
   // check if we won and activate overlay if we did
-  if(s.nuncovered == (s.ncols*s.nrows-s.nmines)) {
-    document.querySelector("#overlaywin").classList.toggle("active");
-  }
   if(s.exploded) {
     document.querySelector("#overlayloss").classList.toggle("active");
+  }
+  else if(s.nuncovered == (s.ncols*s.nrows-s.nmines)) {
+    document.querySelector("#overlaywin").classList.toggle("active");
   }
 }
 
@@ -258,10 +270,10 @@ function getRendering(s) {
       let str = "";
       for( let col = 0 ; col < s.ncols ; col ++ ) {
         let a = s.arr[row][col];
-        if( s.exploded && a.mine) str += "M";
+        if( s.exploded && a.mine) str += "⚠︎";
         else if( a.state === STATE_HIDDEN) str += "H";
-        else if( a.state === STATE_MARKED) str += "F";
-        else if( a.mine) str += "M";
+        else if( a.state === STATE_MARKED) str += "⚑";
+        else if( a.mine) str += "⚠︎";
         else str += a.count.toString();
       }
       res[row] = str;
